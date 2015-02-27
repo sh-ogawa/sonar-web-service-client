@@ -1,2 +1,2 @@
 # sonar-web-service-client
-sonar web api‚ÌsampleÀ‘•‚Ì’iŠK
+sonar web apiã®sampleå®Ÿè£…ã®æ®µéš
