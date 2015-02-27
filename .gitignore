@@ -1,0 +1,7 @@
+/.idea
+/target
+*.iml
+.project
+*.ser
+*.log
+/work
