@@ -35,7 +35,7 @@ public final class SonarApiClient {
 
         List<IssuesSearchDto> issueList = new LinkedList<IssuesSearchDto>();
         String[] params = conf.getKeys("sonar-option");
-        if(params == null){
+        if(params.length == 0){
             IssuesSearchDto issue = (IssuesSearchDto) requestSonarServer(url, IssuesSearchDto.class);
             issueList.add(issue);
         }else{
