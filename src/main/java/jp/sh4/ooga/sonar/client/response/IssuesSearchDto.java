@@ -1,4 +1,4 @@
-package jp.sh4.ooga.api.response;
+package jp.sh4.ooga.sonar.client.response;
 
 import net.arnx.jsonic.JSONHint;
 

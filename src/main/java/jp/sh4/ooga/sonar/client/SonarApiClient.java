@@ -1,12 +1,15 @@
-package jp.sh4.ooga;
+package jp.sh4.ooga.sonar.client;
 
-import jp.sh4.ooga.api.response.IssuesSearchDto;
+import jp.sh4.ooga.sonar.client.response.IssuesSearchDto;
+import jp.sh4.ooga.sonar.client.util.UniversalConfigFile;
 import net.arnx.jsonic.JSON;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * SonarQubeのWEB-APIクライアント(参照のみ)
@@ -18,14 +21,29 @@ public final class SonarApiClient {
     /**
      * 「/api/issuers/search」で違反一覧を取得する
      */
-    public static IssuesSearchDto requestSearchIssue(){
+    public static List<IssuesSearchDto> requestSearchIssues() throws IOException {
 
+        URL resource = SonarApiClient.class.getResource("/jp/sh4/ooga/sonar/client/sonar-web.properties");
+
+        UniversalConfigFile conf = new UniversalConfigFile(resource.getPath());
         StringBuilder builder = new StringBuilder(1024);
-        builder.append("http://localhost:18080/sonar/api/issues/search?format=json");
-        builder.append("&rules=checkstyle:com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck");
-        builder.append("&pageSize=-1");
+        builder.append(conf.getString("url"));
+        builder.append(conf.getString("sonar-api-uri"));
+        builder.append(conf.getString("sonar-common-option"));
 
-        return (IssuesSearchDto) requestSonarServer(builder.toString(), IssuesSearchDto.class);
+        String url = builder.toString();
+
+        List<IssuesSearchDto> issueList = new LinkedList<IssuesSearchDto>();
+        String[] params = conf.getKeys("sonar-option");
+
+        for(String param : params){
+            builder.delete(0, builder.length());
+            builder.append(url).append(conf.getString(param));
+            IssuesSearchDto issue = (IssuesSearchDto) requestSonarServer(builder.toString(), IssuesSearchDto.class);
+            issueList.add(issue);
+        }
+
+        return issueList;
 
     }
 

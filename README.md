@@ -1,2 +1,5 @@
 # sonar-web-service-client
-sonar web apiのsample実装の段階
+Sonar Web APIを利用するサンプル実装です。
+Sonar Web APIは以下にリファレンスがあります。
+GETパラメータ、レスポンスデータのサンプルはリンク先を参照ください。
+http://docs.sonarqube.org/display/SONARQUBE43/Web+Service+API
