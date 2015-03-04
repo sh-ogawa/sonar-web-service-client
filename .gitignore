@@ -5,3 +5,4 @@
 *.ser
 *.log
 /work
+/src/test/resources/out
