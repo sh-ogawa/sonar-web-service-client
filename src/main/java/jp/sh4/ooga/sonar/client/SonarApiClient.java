@@ -35,12 +35,16 @@ public final class SonarApiClient {
 
         List<IssuesSearchDto> issueList = new LinkedList<IssuesSearchDto>();
         String[] params = conf.getKeys("sonar-option");
-
-        for(String param : params){
-            builder.delete(0, builder.length());
-            builder.append(url).append(conf.getString(param));
-            IssuesSearchDto issue = (IssuesSearchDto) requestSonarServer(builder.toString(), IssuesSearchDto.class);
+        if(params == null){
+            IssuesSearchDto issue = (IssuesSearchDto) requestSonarServer(url, IssuesSearchDto.class);
             issueList.add(issue);
+        }else{
+            for(String param : params){
+                builder.delete(0, builder.length());
+                builder.append(url).append(conf.getString(param));
+                IssuesSearchDto issue = (IssuesSearchDto) requestSonarServer(builder.toString(), IssuesSearchDto.class);
+                issueList.add(issue);
+            }
         }
 
         return issueList;
