@@ -51,8 +51,10 @@ public class SonarApiClientTest {
                 List<IssuesSearchDto.Issue> issueList = issues.getIssues();
                 for (IssuesSearchDto.Issue issue : issueList){
                     String comp = issue.getComponent();
-                    builder.append(issue.getRule()).append(",").append(issue.getProject()).append(",")
-                            .append(issue.getComponent()).append(",").append(issue.getLine()).append("\n");
+                    builder.append(issue.getStatus()).append(",").append(issue.getResolution()).append(",")
+                            .append(issue.getRule()).append(",").append(issue.getProject()).append(",")
+                            .append(issue.getComponent()).append(",").append(issue.getLine())
+                            .append("\n");
                     out.write(builder.toString().getBytes());
                     builder.delete(0, builder.length());
                 }
