@@ -38,11 +38,17 @@ public final class SonarApiClient {
         if(params.length == 0){
             IssuesSearchDto issue = (IssuesSearchDto) requestSonarServer(url, IssuesSearchDto.class);
             issueList.add(issue);
+
+            int totalPage = issue.getPaging().getPages();
+            for(int page = 2; page <= totalPage; page++){
+                issue = (IssuesSearchDto) requestSonarServer((url + "&pageIndex=" + page), IssuesSearchDto.class);
+                issueList.add(issue);
+            }
         }else{
             for(String param : params){
                 builder.delete(0, builder.length());
                 builder.append(url).append(conf.getString(param));
-                IssuesSearchDto issue = (IssuesSearchDto) requestSonarServer(builder.toString(), IssuesSearchDto.class);
+                IssuesSearchDto issue = (IssuesSearchDto) requestSonarServer(url + param, IssuesSearchDto.class);
                 issueList.add(issue);
             }
         }

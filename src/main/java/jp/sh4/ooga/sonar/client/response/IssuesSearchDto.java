@@ -15,10 +15,8 @@ public class IssuesSearchDto {
     @JSONHint(name = "maxResultsReached")
     private String maxResultsReached = null;
 
-    /*
     @JSONHint(name = "paging")
-    private String paging = null;
-    */
+    private Paging paging = null;
 
     @JSONHint(name = "issues", type = Issue.class)
     private List<Issue> issues = null;
@@ -48,15 +46,13 @@ public class IssuesSearchDto {
         this.maxResultsReached = maxResultsReached;
     }
 
-    /*
-    public String getPaging() {
+    public Paging getPaging() {
         return paging;
     }
 
-    public void setPaging(String paging) {
+    public void setPaging(Paging paging) {
         this.paging = paging;
     }
-    */
 
     public List<Issue> getIssues() {
         return issues;
@@ -88,6 +84,56 @@ public class IssuesSearchDto {
 
     public void setRules(List<Rule> rules) {
         this.rules = rules;
+    }
+
+    public class Paging{
+
+        boolean hasNext = false;
+
+        @JSONHint(name = "pageIndex")
+        int pageIndex = 0;
+        @JSONHint(name = "pageSize")
+        int pageSize = 0;
+        @JSONHint(name = "total")
+        int total = 0;
+        @JSONHint(name = "pages")
+        int pages = 0;
+
+        public boolean hasNext(){
+            return pageIndex < pages;
+        }
+
+        public int getPageIndex() {
+            return pageIndex;
+        }
+
+        public void setPageIndex(int pageIndex) {
+            this.pageIndex = pageIndex;
+        }
+
+        public int getPageSize() {
+            return pageSize;
+        }
+
+        public void setPageSize(int pageSize) {
+            this.pageSize = pageSize;
+        }
+
+        public int getTotal() {
+            return total;
+        }
+
+        public void setTotal(int total) {
+            this.total = total;
+        }
+
+        public int getPages() {
+            return pages;
+        }
+
+        public void setPages(int pages) {
+            this.pages = pages;
+        }
     }
 
     public class Issue{
