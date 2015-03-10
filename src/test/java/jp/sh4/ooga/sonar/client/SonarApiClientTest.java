@@ -82,8 +82,8 @@ public class SonarApiClientTest {
         ){
             for(RulesResponseDto rule : rules){
                 StringBuilder builder = new StringBuilder(512);
-                builder.append(rule.toString());
-                builder.append("\n");
+                builder.append(rule.getKey()).append(",").append(rule.getTitle()).append(",").append(rule.getPlugin())
+                .append(",").append(rule.getPriority()).append(",").append("\n");
                 out.write(builder.toString().getBytes());
                 builder.delete(0, builder.length());
             }
