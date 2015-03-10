@@ -1,6 +1,7 @@
 package jp.sh4.ooga.sonar.client;
 
 import jp.sh4.ooga.sonar.client.response.IssuesSearchDto;
+import jp.sh4.ooga.sonar.client.response.RulesResponseDto;
 import jp.sh4.ooga.sonar.client.util.UniversalConfigFile;
 import net.arnx.jsonic.JSON;
 
@@ -23,7 +24,7 @@ public final class SonarApiClient {
      */
     public static List<IssuesSearchDto> requestSearchIssues() throws IOException {
 
-        URL resource = SonarApiClient.class.getResource("/jp/sh4/ooga/sonar/client/sonar-web.properties");
+        URL resource = SonarApiClient.class.getResource("/jp/sh4/ooga/sonar/client/sonar-web-search-issues.properties");
 
         UniversalConfigFile conf = new UniversalConfigFile(resource.getPath());
         StringBuilder builder = new StringBuilder(1024);
@@ -54,6 +55,37 @@ public final class SonarApiClient {
         }
 
         return issueList;
+
+    }
+
+    /**
+     * 「/api/rules」でルール一覧を取得する
+     */
+    public static RulesResponseDto[] requestRules() throws IOException {
+
+        URL resource = SonarApiClient.class.getResource("/jp/sh4/ooga/sonar/client/sonar-web-rules.properties");
+        UniversalConfigFile conf = new UniversalConfigFile(resource.getPath());
+        StringBuilder builder = new StringBuilder(1024);
+        builder.append(conf.getString("url"));
+        builder.append(conf.getString("sonar-api-uri"));
+        builder.append(conf.getString("sonar-common-option"));
+
+        String url = builder.toString();
+
+        RulesResponseDto[] rules = null;
+        String[] params = conf.getKeys("sonar-option");
+
+        if(params.length == 0){
+            rules = (RulesResponseDto[]) requestSonarServer(url, RulesResponseDto[].class);
+        } else{
+            for(String param : params){
+                builder.delete(0, builder.length());
+                builder.append(url).append(conf.getString(param));
+
+            }
+        }
+
+        return rules;
 
     }
 

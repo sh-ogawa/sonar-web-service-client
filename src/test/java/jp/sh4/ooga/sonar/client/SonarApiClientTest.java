@@ -3,6 +3,7 @@ package jp.sh4.ooga.sonar.client;
 import static org.junit.Assert.*;
 
 import jp.sh4.ooga.sonar.client.response.IssuesSearchDto;
+import jp.sh4.ooga.sonar.client.response.RulesResponseDto;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,6 +23,9 @@ import java.util.List;
  */
 public class SonarApiClientTest {
 
+    public static String[] outFiles = {"src/test/resources/out/issue.csv"
+            , "src/test/resources/out/rules.csv"};
+
     @Before
     public void setting() throws IOException {
         //出力先のディレクトリ、ファイルを準備する
@@ -29,9 +33,13 @@ public class SonarApiClientTest {
         if(!Files.exists(dir)){
             Files.createDirectories(dir);
         }
-        Path outPath = Paths.get("src/test/resources/out/issue.csv");
-        Files.deleteIfExists(outPath);
-        Files.createFile(outPath);
+
+        for(String outFile : outFiles){
+            Path outPath = Paths.get(outFile);
+            Files.deleteIfExists(outPath);
+            Files.createFile(outPath);
+        }
+
     }
 
     @Test
@@ -50,7 +58,6 @@ public class SonarApiClientTest {
                 StringBuilder builder = new StringBuilder(512);
                 List<IssuesSearchDto.Issue> issueList = issues.getIssues();
                 for (IssuesSearchDto.Issue issue : issueList){
-                    String comp = issue.getComponent();
                     builder.append(issue.getStatus()).append(",").append(issue.getResolution()).append(",")
                             .append(issue.getRule()).append(",").append(issue.getProject()).append(",")
                             .append(issue.getComponent()).append(",").append(issue.getLine())
@@ -60,11 +67,26 @@ public class SonarApiClientTest {
                 }
             }
         }
-
-
-
-
-
     }
 
+    @Test
+    public void ルール一覧の取得を行う() throws  IOException {
+
+        RulesResponseDto[] rules = SonarApiClient.requestRules();
+        assertNotNull(rules);
+        assertNotEquals(rules.length, 0);
+
+        Path outPath = Paths.get("src/test/resources/out/rules.csv");
+        try(
+                OutputStream out = Files.newOutputStream(outPath)
+        ){
+            for(RulesResponseDto rule : rules){
+                StringBuilder builder = new StringBuilder(512);
+                builder.append(rule.toString());
+                builder.append("\n");
+                out.write(builder.toString().getBytes());
+                builder.delete(0, builder.length());
+            }
+        }
+    }
 }
