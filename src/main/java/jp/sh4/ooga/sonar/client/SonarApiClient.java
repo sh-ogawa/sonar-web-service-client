@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,9 +49,7 @@ public final class SonarApiClient {
             }
         }else{
             for(String param : params){
-                builder.delete(0, builder.length());
-                builder.append(url).append(conf.getString(param));
-                IssuesSearchDto issue = (IssuesSearchDto) requestSonarServer(url + param, IssuesSearchDto.class);
+                IssuesSearchDto issue = (IssuesSearchDto) requestSonarServer(url + conf.getString(param), IssuesSearchDto.class);
                 issueList.add(issue);
             }
         }
@@ -61,7 +61,7 @@ public final class SonarApiClient {
     /**
      * 「/api/rules」でルール一覧を取得する
      */
-    public static RulesResponseDto[] requestRules() throws IOException {
+    public static List<RulesResponseDto> requestRules() throws IOException {
 
         URL resource = SonarApiClient.class.getResource("/jp/sh4/ooga/sonar/client/sonar-web-rules.properties");
         UniversalConfigFile conf = new UniversalConfigFile(resource.getPath());
@@ -72,16 +72,14 @@ public final class SonarApiClient {
 
         String url = builder.toString();
 
-        RulesResponseDto[] rules = null;
+        List<RulesResponseDto> rules = new LinkedList<>();
         String[] params = conf.getKeys("sonar-option");
 
         if(params.length == 0){
-            rules = (RulesResponseDto[]) requestSonarServer(url, RulesResponseDto[].class);
+            rules.addAll(Arrays.asList((RulesResponseDto[]) requestSonarServer(url, RulesResponseDto[].class)));
         } else{
             for(String param : params){
-                builder.delete(0, builder.length());
-                builder.append(url).append(conf.getString(param));
-
+                rules.addAll(Arrays.asList((RulesResponseDto[]) requestSonarServer(url + conf.getString(param), RulesResponseDto[].class)));
             }
         }
 

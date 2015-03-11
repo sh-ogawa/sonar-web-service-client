@@ -72,9 +72,9 @@ public class SonarApiClientTest {
     @Test
     public void ルール一覧の取得を行う() throws  IOException {
 
-        RulesResponseDto[] rules = SonarApiClient.requestRules();
+        List<RulesResponseDto> rules = SonarApiClient.requestRules();
         assertNotNull(rules);
-        assertNotEquals(rules.length, 0);
+        assertNotEquals(rules.size(), 0);
 
         Path outPath = Paths.get("src/test/resources/out/rules.csv");
         try(
