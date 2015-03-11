@@ -10,14 +10,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * SonarQubeのWEB-APIクライアント(参照のみ)
- * @version 1.0
- * @author ogawa
  */
 public final class SonarApiClient {
 
@@ -26,7 +23,8 @@ public final class SonarApiClient {
      */
     public static List<IssuesSearchDto> requestSearchIssues() throws IOException {
 
-        URL resource = SonarApiClient.class.getResource("/jp/sh4/ooga/sonar/client/sonar-web-search-issues.properties");
+        URL resource = SonarApiClient.class.getResource(
+                "/jp/sh4/ooga/sonar/client/sonar-web-search-issues.properties");
 
         UniversalConfigFile conf = new UniversalConfigFile(resource.getPath());
         StringBuilder builder = new StringBuilder(1024);
@@ -49,7 +47,8 @@ public final class SonarApiClient {
             }
         }else{
             for(String param : params){
-                IssuesSearchDto issue = (IssuesSearchDto) requestSonarServer(url + conf.getString(param), IssuesSearchDto.class);
+                IssuesSearchDto issue = (IssuesSearchDto) requestSonarServer(url + conf.getString(param)
+                        , IssuesSearchDto.class);
                 issueList.add(issue);
             }
         }
@@ -63,7 +62,8 @@ public final class SonarApiClient {
      */
     public static List<RulesResponseDto> requestRules() throws IOException {
 
-        URL resource = SonarApiClient.class.getResource("/jp/sh4/ooga/sonar/client/sonar-web-rules.properties");
+        URL resource = SonarApiClient.class.getResource(
+                "/jp/sh4/ooga/sonar/client/sonar-web-rules.properties");
         UniversalConfigFile conf = new UniversalConfigFile(resource.getPath());
         StringBuilder builder = new StringBuilder(1024);
         builder.append(conf.getString("url"));
@@ -79,7 +79,8 @@ public final class SonarApiClient {
             rules.addAll(Arrays.asList((RulesResponseDto[]) requestSonarServer(url, RulesResponseDto[].class)));
         } else{
             for(String param : params){
-                rules.addAll(Arrays.asList((RulesResponseDto[]) requestSonarServer(url + conf.getString(param), RulesResponseDto[].class)));
+                rules.addAll(Arrays.asList((RulesResponseDto[]) requestSonarServer(url + conf.getString(param)
+                        , RulesResponseDto[].class)));
             }
         }
 

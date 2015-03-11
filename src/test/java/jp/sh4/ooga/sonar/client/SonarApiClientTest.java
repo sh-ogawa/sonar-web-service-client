@@ -18,8 +18,6 @@ import java.util.List;
 
 /**
  * SonarApiClientのテストクラス
- * @version 1.0
- * @author ogawa
  */
 public class SonarApiClientTest {
 
